@@ -15,28 +15,48 @@ export function App() {
   }, []);
 
   const clickOnNumber = (number) => {
-    operator
-      ? setOperand2(
-          (value) => value + number,
-          setUserInput(operand1 + operator + (operand2 + number))
-        )
-      : setOperand1((value) => value + number, setUserInput(operand1 + number));
+    if (operator) {
+      setOperand2((prev) => prev + number);
+      setUserInput(operand1 + operator + (operand2 + number));
+    } else {
+      setOperand1((prev) => prev + number);
+      setUserInput(operand1 + number);
+    }
   };
 
   const clickOnResult = () => {
     operator === "" && setUserInput(0);
+    let result;
 
-    operator === "+"
-      ? setUserInput(Number(operand1) + Number(operand2))
-      : setUserInput(Number(operand1) - Number(operand2));
+    if (operator === "+") {
+      result = Number(operand1) + Number(operand2);
+    } else if (operator === "-") {
+      result = Number(operand1) - Number(operand2);
+    }
 
-    setOperand1("");
+    setUserInput(result.toString());
+    setOperand1(result.toString());
     setOperand2("");
     setOperator("");
   };
 
   const clickOnOperator = (item) => {
-    operator === "" || operand2 ? setOperator(item) : setOperator(item);
+    if (operand2) {
+      let result;
+      if (operator === "+") {
+        result = Number(operand1) + Number(operand2);
+      } else if (operator === "-") {
+        result = Number(operand1) - Number(operand2);
+      }
+
+      setOperand1(result.toString());
+      setOperand2("");
+      setUserInput(result.toString() + item);
+      setOperator(item);
+    } else {
+      setOperator(item);
+      setUserInput(operand1 + item);
+    }
   };
 
   const clickOnReset = () => {
