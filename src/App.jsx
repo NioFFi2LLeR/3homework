@@ -54,11 +54,9 @@ export function App() {
         );
       default:
         return (
-          typeof item === "number" && (
-            <button key={index} onClick={() => clickOnNumber(item)}>
-              {item}
-            </button>
-          )
+          <button key={index} onClick={() => clickOnNumber(item)}>
+            {item}
+          </button>
         );
     }
   };
