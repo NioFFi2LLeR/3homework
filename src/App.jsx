@@ -8,12 +8,6 @@ export function App() {
   const [operator, setOperator] = useState("");
   const [userInput, setUserInput] = useState("");
 
-  const sortedArray = array.reduce((acc, item, index) => {
-    if (index % 4 === 0) acc.push([]);
-    acc[acc.length - 1].push(item);
-    return acc;
-  }, []);
-
   const clickOnNumber = (number) => {
     if (operator) {
       setOperand2((prev) => prev + number);
@@ -21,6 +15,51 @@ export function App() {
     } else {
       setOperand1((prev) => prev + number);
       setUserInput(operand1 + number);
+    }
+  };
+
+  const createButton = (item, index) => {
+    switch (item) {
+      case "C":
+        return (
+          <button key={index} className={style.reset} onClick={clickOnReset}>
+            {item}
+          </button>
+        );
+      case "=":
+        return (
+          <button key={index} className={style.equal} onClick={clickOnResult}>
+            {item}
+          </button>
+        );
+      case "+":
+        return (
+          <button
+            key={index}
+            className={style.sum}
+            onClick={() => clickOnOperator(item)}
+          >
+            {item}
+          </button>
+        );
+      case "-":
+        return (
+          <button
+            key={index}
+            className={style.min}
+            onClick={() => clickOnOperator(item)}
+          >
+            {item}
+          </button>
+        );
+      default:
+        return (
+          typeof item === "number" && (
+            <button key={index} onClick={() => clickOnNumber(item)}>
+              {item}
+            </button>
+          )
+        );
     }
   };
 
@@ -72,49 +111,9 @@ export function App() {
         <div className={style.content}>
           <input type="text" value={userInput || "0"} placeholder="0" />
 
-          {sortedArray.map((row, rowIndex) => (
-            <div key={rowIndex}>
-              {row.map((item, index) =>
-                typeof item === "number" ? (
-                  <button key={index} onClick={() => clickOnNumber(item)}>
-                    {item}
-                  </button>
-                ) : item === "C" ? (
-                  <button
-                    key={index}
-                    className={style.reset}
-                    onClick={clickOnReset}
-                  >
-                    {item}
-                  </button>
-                ) : item === "=" ? (
-                  <button
-                    key={index}
-                    className={style.equal}
-                    onClick={clickOnResult}
-                  >
-                    {item}
-                  </button>
-                ) : item === "+" ? (
-                  <button
-                    key={index}
-                    className={style.sum}
-                    onClick={() => clickOnOperator(item)}
-                  >
-                    {item}
-                  </button>
-                ) : (
-                  <button
-                    key={index}
-                    className={style.min}
-                    onClick={() => clickOnOperator(item)}
-                  >
-                    {item}
-                  </button>
-                )
-              )}
-            </div>
-          ))}
+          <div className={style.grid}>
+            {array.map((item, index) => createButton(item, index))}
+          </div>
         </div>
       </div>
     </>
